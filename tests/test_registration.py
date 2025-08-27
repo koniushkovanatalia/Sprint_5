@@ -9,35 +9,41 @@ from config import login_url, register_url
 
 from locators import Locators
 
-def test_successful_registration_and_login(browser, generate_registration_data): # успешная регистрация
-    browser.get(register_url)
+class Test_Registration:
 
-    browser.find_element(*Locators.NAME).send_keys(generate_registration_data["name"])
-    browser.find_element(*Locators.EMAIL).send_keys(generate_registration_data["email"])
-    browser.find_element(*Locators.PASSWORD).send_keys(generate_registration_data["password"])
-    browser.find_element(*Locators.REGISTER_BUTTON).click()
+    def test_successful_registration_and_login(self, open_login_page, generate_registration_data): # успешная регистрация
+        browser = open_login_page
 
-    login_button = WebDriverWait(browser, 5).until(
-        EC.presence_of_element_located(*Locators.LOGIN_BUTTON)
-    )
+        register_link = WebDriverWait(browser, 10).until(
+            EC.visibility_of_element_located(Locators.REGISTER_LINK_ON_LOGIN_PAGE))
 
-    assert login_button.is_displayed()
+        register_link.click()
 
-    browser.quit()
+        browser.find_element(*Locators.NAME).send_keys(generate_registration_data["name"])
+        browser.find_element(*Locators.EMAIL).send_keys(generate_registration_data["email"])
+        browser.find_element(*Locators.PASSWORD).send_keys(generate_registration_data["password"])
+        browser.find_element(*Locators.REGISTER_BUTTON).click()
 
-def test_registration_shows_error_if_password_less_than_6_chars(browser, generate_registration_data_with_short_password): # ошибка для некорректного пароля
-    browser.get(register_url)
+        login_button = WebDriverWait(browser, 10).until(EC.presence_of_element_located(Locators.LOGIN_BUTTON))
 
-    browser.find_element(*Locators.NAME).send_keys(generate_registration_data_with_short_password["name"])
-    browser.find_element(*Locators.EMAIL).send_keys(generate_registration_data_with_short_password["email"])
-    browser.find_element(*Locators.PASSWORD).send_keys(generate_registration_data_with_short_password["password"])
-    browser.find_element(*Locators.REGISTER_BUTTON).click()
+        assert login_button.is_displayed()
 
-    # Ждем, пока появится ошибка "Некорректный пароль"
-    error_message = WebDriverWait(browser, 5).until(
-        EC.presence_of_element_located(*Locators.PASSWORD_ERROR)
-    )
 
-    assert error_message.is_displayed()
+    def test_registration_shows_error_if_password_less_than_6_chars(self, open_login_page, generate_registration_data_with_short_password): # ошибка для некорректного пароля
+        browser = open_login_page
 
-    browser.quit()
+        register_link = WebDriverWait(browser, 10).until(
+            EC.visibility_of_element_located(Locators.REGISTER_LINK_ON_LOGIN_PAGE))
+
+        register_link.click()
+
+        browser.find_element(*Locators.NAME).send_keys(generate_registration_data_with_short_password["name"])
+        browser.find_element(*Locators.EMAIL).send_keys(generate_registration_data_with_short_password["email"])
+        browser.find_element(*Locators.PASSWORD).send_keys(generate_registration_data_with_short_password["password"])
+        browser.find_element(*Locators.REGISTER_BUTTON).click()
+
+        error_message = WebDriverWait(browser, 10).until(EC.presence_of_element_located(Locators.PASSWORD_ERROR))
+
+        assert error_message.is_displayed()
+
+

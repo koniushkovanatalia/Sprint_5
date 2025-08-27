@@ -8,82 +8,46 @@ from config import base_url
 from locators import Locators
 from data import Credentials
 
-def test_navigate_from_personal_account_by_click_constructor_button(browser): # переход из личного кабинета в конструктор по клику на "Конструктор"
-    browser.get(base_url)
 
-    login_button = WebDriverWait(browser, 10).until(
-        EC.element_to_be_clickable(Locators.LOGIN_BUTTON_MAIN)
-    )
-    login_button.click()
+class TestConstructorNavigation:
 
-    browser.find_element(*Locators.EMAIL).send_keys(Credentials.email)
-    browser.find_element(*Locators.PASSWORD).send_keys(Credentials.password)
-    browser.find_element(*Locators.LOGIN_BUTTON).click()
+    def test_navigate_from_personal_account_by_click_constructor_button(self, open_login_page, login, logout): # переход из личного кабинета в конструктор по клику на "Конструктор"
+        browser, order_button = login
 
-    order_button = WebDriverWait(browser, 10).until(
-        EC.visibility_of_element_located(Locators.ORDER_BUTTON))
+        assert order_button.is_displayed()
 
-    assert order_button.is_displayed()
+        browser.find_element(*Locators.ACCOUNT_BUTTON).click()
 
-    browser.find_element(*Locators.ACCOUNT_BUTTON).click()
+        constructor_button = WebDriverWait(browser, 15).until(
+            EC.element_to_be_clickable(Locators.CONSTRUCTOR_BUTTON)
+        )
+        constructor_button.click()
 
-    constructor_button = WebDriverWait(browser, 10).until(
-        EC.element_to_be_clickable(Locators.CONSTRUCTOR_BUTTON)
-    )
-    constructor_button.click()
+        order_button = WebDriverWait(browser, 15).until(
+            EC.visibility_of_element_located(Locators.ORDER_BUTTON)
+        )
+        assert order_button.is_displayed()
 
-    order_button = WebDriverWait(browser, 10).until(
-        EC.visibility_of_element_located(Locators.ORDER_BUTTON))
+        logout(browser)
 
-    assert order_button.is_displayed()
+    def test_navigate_from_personal_account_by_click_logo(self, open_login_page, login, logout):  # переход из личного кабинета в конструктор по клику на логотип Stellar Burgers
+        browser, order_button = login
 
-    browser.find_element(*Locators.ACCOUNT_BUTTON).click()
+        assert order_button.is_displayed()
 
-    logout_button = WebDriverWait(browser, 10).until(
-        EC.element_to_be_clickable(Locators.LOGOUT_BUTTON))
+        browser.find_element(*Locators.ACCOUNT_BUTTON).click()
 
-    logout_button.click()
+        logo_button = WebDriverWait(browser, 10).until(
+            EC.element_to_be_clickable(Locators.STELLAR_BURGERS_LOGO)
+        )
+        logo_button.click()
 
-    browser.quit()
+        order_button = WebDriverWait(browser, 15).until(
+            EC.visibility_of_element_located(Locators.ORDER_BUTTON)
+        )
+        assert order_button.is_displayed()
 
-def test_navigate_from_personal_account_by_click_logo(browser):# переход из личного кабинета в конструктор по клику на логотип Stellar Burgers
-    browser.get(base_url)
-
-    login_button = WebDriverWait(browser, 10).until(
-        EC.element_to_be_clickable(Locators.LOGIN_BUTTON_MAIN)
-    )
-    login_button.click()
-
-    browser.find_element(*Locators.EMAIL).send_keys(Credentials.email)
-    browser.find_element(*Locators.PASSWORD).send_keys(Credentials.password)
-    browser.find_element(*Locators.LOGIN_BUTTON).click()
-
-    order_button = WebDriverWait(browser, 10).until(
-        EC.visibility_of_element_located(Locators.ORDER_BUTTON))
-
-    assert order_button.is_displayed()
-
-    browser.find_element(*Locators.ACCOUNT_BUTTON).click()
-
-    logo_button = WebDriverWait(browser, 10).until(
-        EC.element_to_be_clickable(Locators.STELLAR_BURGERS_LOGO)
-    )
-    logo_button.click()
-
-    order_button = WebDriverWait(browser, 10).until(
-        EC.visibility_of_element_located(Locators.ORDER_BUTTON))
-
-    assert order_button.is_displayed()
-
-    browser.find_element(*Locators.ACCOUNT_BUTTON).click()
-
-    logout_button = WebDriverWait(browser, 10).until(
-        EC.element_to_be_clickable(Locators.LOGOUT_BUTTON))
-
-    logout_button.click()
-
-    browser.quit()
-
+        logout(browser)
 
 
 

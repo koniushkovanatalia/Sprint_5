@@ -8,36 +8,25 @@ from config import base_url
 from locators import Locators
 from data import Credentials
 
-def test_navigate_to_account_page(browser): # переход по клику на «Личный кабинет»
-    browser.get(base_url)
 
-    login_button = WebDriverWait(browser, 10).until(
-        EC.element_to_be_clickable(Locators.LOGIN_BUTTON_MAIN)
-    )
-    login_button.click()
+class TestProfileNavigation:
 
-    browser.find_element(*Locators.EMAIL).send_keys(Credentials.email)
-    browser.find_element(*Locators.PASSWORD).send_keys(Credentials.password)
-    browser.find_element(*Locators.LOGIN_BUTTON).click()
+    def test_navigate_to_account_page(self, open_login_page, login, logout): # переход по клику на «Личный кабинет»
+        browser, order_button = login
 
-    order_button = WebDriverWait(browser, 10).until(
-        EC.visibility_of_element_located(Locators.ORDER_BUTTON))
+        assert order_button.is_displayed()
 
-    assert order_button.is_displayed()
+        browser.find_element(*Locators.ACCOUNT_BUTTON).click()
 
-    browser.find_element(*Locators.ACCOUNT_BUTTON).click()
+        profile_button = WebDriverWait(browser, 10).until(
+            EC.visibility_of_element_located(Locators.PROFILE_BUTTON))
 
-    profile_button = WebDriverWait(browser, 10).until(
-        EC.visibility_of_element_located(Locators.PROFILE_BUTTON))
+        assert profile_button.is_displayed()
 
-    assert profile_button.is_displayed()
+        logout(browser)
 
-    logout_button = WebDriverWait(browser, 10).until(
-        EC.element_to_be_clickable(Locators.LOGOUT_BUTTON))
 
-    logout_button.click()
 
-    browser.quit()
 
 
 
