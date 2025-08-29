@@ -9,7 +9,7 @@ from config import login_url, register_url
 
 from locators import Locators
 
-class Test_Registration:
+class TestRegistration:
 
     def test_successful_registration_and_login(self, open_login_page, generate_registration_data): # успешная регистрация
         browser = open_login_page
